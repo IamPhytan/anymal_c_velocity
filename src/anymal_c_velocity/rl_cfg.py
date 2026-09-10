@@ -26,4 +26,5 @@ def anymal_c_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg:
     ),
     experiment_name="anymal_c_velocity",
     max_iterations=10_000,
+    wandb_project="mjlab-anymal-c",
   )
