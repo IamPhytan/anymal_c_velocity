@@ -5,7 +5,6 @@ from pathlib import Path
 import mujoco
 from mjlab.actuator import BuiltinPositionActuatorCfg
 from mjlab.entity import EntityArticulationInfoCfg, EntityCfg
-from mjlab.utils.os import update_assets
 from mjlab.utils.spec_config import CollisionCfg
 
 ##
@@ -18,16 +17,8 @@ ANYMAL_C_XML: Path = _HERE / "xmls" / "anymal_c.xml"
 assert ANYMAL_C_XML.exists()
 
 
-def get_assets(meshdir: str) -> dict[str, bytes]:
-  assets: dict[str, bytes] = {}
-  update_assets(assets, ANYMAL_C_XML.parent / "assets", meshdir)
-  return assets
-
-
 def get_spec() -> mujoco.MjSpec:
-  spec = mujoco.MjSpec.from_file(str(ANYMAL_C_XML))
-  spec.assets = get_assets(spec.meshdir)
-  return spec
+  return mujoco.MjSpec.from_file(str(ANYMAL_C_XML))
 
 
 ##
@@ -82,6 +73,8 @@ _foot_regex = r"^[LR][FH]_foot$"
 
 FULL_COLLISION = CollisionCfg(
   geom_names_expr=(".*_collision", _foot_regex),
+  contype=1,
+  conaffinity=1,
   condim=3,
   priority=1,
   friction=(0.6,),
